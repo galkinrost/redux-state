@@ -1,0 +1,42 @@
+{
+  "name": "redux-state",
+  "version": "0.0.1",
+  "description": "A high order component using react-redux to keep component state in redux store",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-register --recursive --require ./test/setup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Babo-Ltd/redux-state.git"
+  },
+  "keywords": [
+    "redux",
+    "react",
+    "state",
+    "reactjs",
+    "react-redux",
+    "decorator"
+  ],
+  "author": "Galkin Rostislav <galkinrost@gmail.com> (http://github.com/galkinrost)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Babo-Ltd/redux-state/issues"
+  },
+  "homepage": "https://github.com/Babo-Ltd/redux-state#readme",
+  "devDependencies": {
+    "babel-core": "6.5.1",
+    "babel-loader": "6.2.2",
+    "expect": "1.14.0",
+    "jsdom": "8.0.2",
+    "mocha": "2.4.5",
+    "react": "0.14.7",
+    "react-redux": "4.4.0",
+    "webpack": "1.12.13"
+  },
+  "dependencies": {
+    "hoist-non-react-statics": "1.0.5",
+    "invariant": "2.2.0",
+    "loose-envify": "1.1.0"
+  }
+}
