@@ -11,6 +11,7 @@ const stateReducer = (state = initialState, action)=> {
 
     switch (action.type) {
         case INIT_STATE:
+        {
             const {stateId, stateReducer} = action.payload;
 
             // TODO check if stateId's already registered
@@ -18,12 +19,14 @@ const stateReducer = (state = initialState, action)=> {
                 ...state,
                 [stateId]: stateCreator(stateId, stateReducer)
             };
+        }
         case REMOVE_STATE:
+        {
             const {stateId} = action.payload;
             const {[stateId]: stateToRemove, ...restStates} = state;
 
             return restStates;
-
+        }
     }
 
     if (action.stateId) {
