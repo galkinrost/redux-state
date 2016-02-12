@@ -1,8 +1,13 @@
 {
   "name": "redux-state",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A high order component using react-redux style to keep component state in redux store",
-  "main": "lib/index.js",
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
+  "main": "./lib/index.js",
   "scripts": {
     "build:lib": "babel src --out-dir lib",
     "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/redux-state.js",
