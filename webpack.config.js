@@ -1,21 +1,21 @@
-'use strict'
+'use strict';
 
-var webpack = require('webpack')
-var env = process.env.NODE_ENV
+var webpack = require('webpack');
+var env = process.env.NODE_ENV;
 
 var reactExternal = {
     root: 'React',
     commonjs2: 'react',
     commonjs: 'react',
     amd: 'react'
-}
+};
 
 var reduxExternal = {
     root: 'Redux',
     commonjs2: 'redux',
     commonjs: 'redux',
     amd: 'redux'
-}
+};
 
 var config = {
     externals: {
@@ -45,7 +45,7 @@ var config = {
             'process.env.NODE_ENV': JSON.stringify(env)
         })
     ]
-}
+};
 
 if (env === 'production') {
     config.plugins.push(
@@ -59,6 +59,6 @@ if (env === 'production') {
             }
         })
     )
-}
+};
 
-module.exports = config
+module.exports = config;

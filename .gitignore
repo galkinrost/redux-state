@@ -34,3 +34,7 @@ node_modules
 
 # IDE directory
 .idea
+
+# Buid
+lib
+dist

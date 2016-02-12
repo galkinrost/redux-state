@@ -1,9 +1,13 @@
 {
   "name": "redux-state",
   "version": "0.0.1",
-  "description": "A high order component using react-redux to keep component state in redux store",
-  "main": "index.js",
+  "description": "A high order component using react-redux style to keep component state in redux store",
+  "main": "lib/index.js",
   "scripts": {
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/redux-state.js",
+    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/redux-state.min.js",
+    "build": "npm run build:lib && npm run build:umd && npm run build:umd:min && node ./prepublish",
     "test": "mocha --compilers js:babel-register --recursive --require ./test/setup.js",
     "test:watch": "npm test -- --watch"
   },
@@ -32,7 +36,10 @@
     "babel-plugin-transform-object-rest-spread": "6.5.0",
     "babel-plugin-transform-react-jsx": "6.5.0",
     "babel-preset-es2015": "6.5.0",
+    "cross-env": "1.0.7",
+    "es3ify": "0.2.1",
     "expect": "1.14.0",
+    "glob": "7.0.0",
     "jsdom": "8.0.2",
     "mocha": "2.4.5",
     "react": "0.14.7",
