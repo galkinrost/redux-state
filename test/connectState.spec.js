@@ -37,6 +37,8 @@ describe('redux-state', ()=> {
         };
 
         it('should throw error when connectState called first time without reducer', ()=> {
+            const store = createStoreWithStates();
+
             @connectState()
             class Container extends Component {
                 render() {
@@ -47,7 +49,7 @@ describe('redux-state', ()=> {
             }
 
             expect(()=>TestUtils.renderIntoDocument(
-                <ProviderMock store={{}}>
+                <ProviderMock store={store}>
                     <Container/>
                 </ProviderMock>
             )).toThrow(/with reducer/);
@@ -158,6 +160,44 @@ describe('redux-state', ()=> {
                 type: 'SOME_TYPE',
                 stateId
             }).calledOnce).toBeTruthy();
+        });
+
+        it('should pass stateId into the context', ()=> {
+            const stateId = '001';
+            const store = createStoreWithStates({
+                [stateId]: {
+                    state: {}
+                }
+            });
+            const stateReducer = ()=>({});
+            Passthrough.contextTypes = {
+                stateId: PropTypes.string
+            };
+
+            try {
+
+                @connectState(undefined, undefined, undefined, stateReducer)
+                class Container extends Component {
+                    render() {
+                        return (
+                            <Passthrough {...this.props}/>
+                        );
+                    }
+                }
+
+                const tree = TestUtils.renderIntoDocument(
+                    <ProviderMock store={store}>
+                        <Container stateId={stateId}/>
+                    </ProviderMock>
+                );
+
+                const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough);
+
+                expect(passthrough.context.stateId).toEqual(stateId);
+
+            } finally {
+                Passthrough.contextTypes = {};
+            }
         });
     });
 });

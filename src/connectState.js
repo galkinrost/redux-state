@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import hoist from 'hoist-non-react-statics';
 import invariant from 'invariant';
 
+import {storePropType, stateIdPropType} from './propTypes';
 import * as actions from './actions';
 import nextStateId from './nextStateId';
 
@@ -12,6 +13,9 @@ const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
     ...stateProps,
     ...dispatchProps
 });
+
+const getStateOfStates = store => store.getState()._states;
+const checkStateConnected = store=> invariant(store.getState()._states, 'Should add statesReducer into the store');
 
 const createStateDispatch = (store, stateId) => {
     const stateDispatch = (action) => {
@@ -31,12 +35,32 @@ const createStateDispatch = (store, stateId) => {
     return stateDispatch;
 };
 
-const connectState = (mapStateToProps = defaultMapStateToProps, mapsDispatchToProps = defaultMapDispatchToProps, mergeProps = defaultMergeProps, stateReducer)=> {
+const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateDispatchToProps = defaultMapDispatchToProps, mergeProps = defaultMergeProps, stateReducer)=> {
+
+    const mapStateToProps = (store, stateId, props)=> {
+        const {[stateId]: {state: stateOfState}} = getStateOfStates(store);
+
+        return mapStateOfStateToProps(stateOfState, props, store.getState());
+    };
+    const mapDispatchToProps = (store, stateId, props)=>{
+        const stateDispatch = createStateDispatch(store, stateId);
+        return mapStateDispatchToProps(stateDispatch, props, store.dispatch);
+    };
+
     return WrappedComponent=> {
         class ReduxState extends Component {
+
+            getChildContext() {
+                return {
+                    stateId: this.state.stateId
+                };
+            }
+
             componentWillMount() {
+                const {store} = this.context;
+                checkStateConnected(store);
+
                 if (stateReducer) {
-                    const {store} = this.context;
                     const {stateId = nextStateId()} = this.props;
                     this.setState({stateId});
 
@@ -61,21 +85,10 @@ const connectState = (mapStateToProps = defaultMapStateToProps, mapsDispatchToPr
 
             render() {
                 const {store} = this.context;
-                const {_states} = store.getState();
-
-                invariant(_states, 'Should add statesReducer into the store');
-
                 const {stateId} = this.state;
 
-                const {state} = _states[stateId];
-
-                if (!state) {
-                    return null;
-                }
-
-                const stateDispatch = createStateDispatch(store, stateId);
-                const stateProps = mapStateToProps(state, this.props, store.getState());
-                const dispatchProps = mapsDispatchToProps(stateDispatch, this.props, store.dispatch);
+                const stateProps = mapStateToProps(store, stateId, this.props);
+                const dispatchProps = mapDispatchToProps(store, stateId, this.props);
                 const mergedProps = mergeProps(stateProps, dispatchProps, this.props);
 
                 return (
@@ -84,12 +97,13 @@ const connectState = (mapStateToProps = defaultMapStateToProps, mapsDispatchToPr
             }
         }
 
+        ReduxState.childContextTypes = {
+            stateId: stateIdPropType
+        };
+
         ReduxState.contextTypes = {
-            store: PropTypes.object.isRequired,
-            stateId: PropTypes.oneOfType([
-                PropTypes.number,
-                PropTypes.string
-            ])
+            store: storePropType,
+            stateId: stateIdPropType
         };
         return hoist(ReduxState, WrappedComponent);
     }
