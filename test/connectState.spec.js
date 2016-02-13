@@ -199,5 +199,86 @@ describe('redux-state', ()=> {
                 Passthrough.contextTypes = {};
             }
         });
+
+        it('should work like thunk-middleware when function passed as an action', ()=>{
+            const stateId = '001';
+            const localState = {
+                foo: 'bar'
+            };
+            const store = createStoreWithStates({
+                [stateId]: {
+                    state: localState
+                }
+            });
+            const dispatchSpy = sinon.spy(store, 'dispatch');
+            const stateReducer = ()=>({});
+
+            @connectState(undefined, undefined, undefined, stateReducer)
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    );
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container stateId={stateId}/>
+                </ProviderMock>
+            );
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough);
+
+            passthrough.props.stateDispatch((stateDispatch, _localState, _store)=>{
+                expect(_store).toBe(store);
+                expect(_localState).toBe(_localState);
+
+                stateDispatch({
+                    type: 'SOME_TYPE'
+                });
+            });
+
+            expect(dispatchSpy.withArgs({
+                type: 'SOME_TYPE',
+                stateId
+            }).calledOnce).toBeTruthy();
+        });
+
+        it('should throw error when somebody dispatch action after component did unmount', ()=>{
+            const stateId = '001';
+            const store = createStoreWithStates({
+                [stateId]: {}
+            });
+            const dispatchSpy = sinon.spy(store, 'dispatch');
+            const stateReducer = ()=>({});
+
+            @connectState(undefined, undefined, undefined, stateReducer)
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    );
+                }
+            }
+
+            const div = document.createElement('div');
+            const tree = ReactDOM.render(
+                <ProviderMock store={store}>
+                    <Container stateId={stateId}/>
+                </ProviderMock>
+                , div);
+
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough);
+
+            ReactDOM.unmountComponentAtNode(div);
+
+
+            setTimeout(()=> {
+                expect(()=>{
+                    passthrough.props.stateDispatch();
+                }).toThrow(/already unmount/);
+                done()
+            }, 0);
+        });
     });
 });

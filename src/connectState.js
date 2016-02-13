@@ -15,15 +15,19 @@ const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
 });
 
 const getStateOfStates = store => store.getState()._states;
-const checkStateConnected = store=> invariant(store.getState()._states, 'Should add statesReducer into the store');
+const checkStateConnected = store=> invariant(getStateOfStates(store), 'Should add statesReducer into the store');
 
 const createStateDispatch = (store, stateId) => {
     const stateDispatch = (action) => {
+        const states = getStateOfStates(store);
+        invariant(states[stateId], 'Somebody trying get state when component`s already unmount');
+
         if (typeof action === 'function') {
-            const {_states} = store.getState();
-            const {stateId} = this.state;
-            const {state} = _states[stateId];
-            return action(stateDispatch, state, store);
+            const getState = () => {
+                const {[stateId]: {state}} = states;
+                return state;
+            };
+            return action(stateDispatch, getState, store);
         }
 
         store.dispatch({
@@ -42,7 +46,7 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
 
         return mapStateOfStateToProps(stateOfState, props, store.getState());
     };
-    const mapDispatchToProps = (store, stateId, props)=>{
+    const mapDispatchToProps = (store, stateId, props)=> {
         const stateDispatch = createStateDispatch(store, stateId);
         return mapStateDispatchToProps(stateDispatch, props, store.dispatch);
     };
