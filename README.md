@@ -1,6 +1,6 @@
 # Redux State
 
-React-Redux style implementation of storage a local state for reusable components
+`connect()` style implementation of storage a local state for reusable components
 
 ## Installation
 
