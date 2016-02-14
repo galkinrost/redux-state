@@ -59,3 +59,34 @@ const localReducer = (state = initialState, action) => {
 
 export default localReducer;
 ```
+
+## Async actions
+
+Like with redux-thunk
+
+```javascript
+const localAction = () => (localDispatch, getLocalState, store) =>{
+    ...
+}
+```
+
+## Action scopes
+
+```javascript
+// Action dispatched with redux dispatch function
+dispatch({
+    type: 'ACTION_TYPE',
+    payload: {
+        ...
+    }
+}); // => { type: 'ACTION_TYPE', payload: {...} }
+
+// Action dispatched with state dispatch function
+localDispatch({
+    type: 'LOCAL_ACTION_TYPE',
+    payload: { 
+        ...
+    }
+}); // => { type: 'LOCAL_ACTION_TYPE', payload: {...}, stateId: ... }
+```
+
