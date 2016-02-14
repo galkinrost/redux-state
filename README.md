@@ -27,12 +27,16 @@ const store = createStore(reducer);
 // Component
 import React from 'react';
 import {connectState} from 'redux-state';
+import {bindActionCreators} from 'redux';
 import localReducer from './reducer';
+import * as actions from './actions';
 
 const mapStateToProps = (localState, props, state) => ({
     ...
 });
 const mapDispatchToProps = (localDispatch, props, dispatch) => ({
+    localAction: bindActionCreators(action.localAction, localDispatch),
+    globalAction: bindActionCreators(action.globalAction, dispatch)
     ...
 });
 const mergeProps = (stateProps, dispatchProps, props) => ({
