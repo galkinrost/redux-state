@@ -35,8 +35,8 @@ const mapStateToProps = (localState, props, state) => ({
     ...
 });
 const mapDispatchToProps = (localDispatch, props, dispatch) => ({
-    localAction: bindActionCreators(action.localAction, localDispatch),
-    globalAction: bindActionCreators(action.globalAction, dispatch)
+    localAction: bindActionCreators(actions.localAction, localDispatch),
+    globalAction: bindActionCreators(actions.globalAction, dispatch)
     ...
 });
 const mergeProps = (stateProps, dispatchProps, props) => ({
