@@ -11,7 +11,7 @@ import * as actionTypes from '../src/actionTypes';
 describe('redux-state', ()=> {
     describe('connectState', ()=> {
         const createStoreWithStates = (states = {})=>createStore(()=>({
-            _states: states
+            states
         }));
 
         class Passthrough extends Component {

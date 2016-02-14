@@ -14,7 +14,7 @@ const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
     ...dispatchProps
 });
 
-const getStateOfStates = store => store.getState()._states;
+const getStateOfStates = store => store.getState().states;
 const checkStateConnected = store=> invariant(getStateOfStates(store), 'Should add statesReducer into the store');
 
 const createStateDispatch = (store, stateId) => {
