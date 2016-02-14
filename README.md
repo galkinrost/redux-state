@@ -27,7 +27,7 @@ const store = createStore(reducer);
 // Component
 import React from 'react';
 import {connectState} from 'redux-state';
-import reducer from './reducer';
+import localReducer from './reducer';
 
 const mapStateToProps = (localState, props, state) => ({
     ...
@@ -43,7 +43,7 @@ const Component = (props)=>(
 ...
 );
 
-export default connectState(mapStateToProps, mapDispatchToProps, mergeProps, reducer)(Component);
+export default connectState(mapStateToProps, mapDispatchToProps, mergeProps, localReducer)(Component);
 
 // reducer
 
@@ -104,4 +104,25 @@ const localReducer = (localState, localAction) => {
     // receives only local actions for concrete instance of component
     ...
 };
+```
+
+## Connecting children to the parent state
+
+```javascript
+// Root
+...
+const Root = () =>(
+    <div>
+        <ChildContainer/>
+    </div>
+);
+
+export default connectState(mapStateToProps, mapDispatchToProps, mergeProps, localReducer)(Root);
+
+// Child
+...
+const Child = () =>(
+    ...
+);
+export default connectState(mapStateToProps, mapDispatchToProps, mergeProps)(Child);
 ```
