@@ -90,3 +90,18 @@ localDispatch({
 }); // => { type: 'LOCAL_ACTION_TYPE', payload: {...}, stateId: ... }
 ```
 
+## Local reducer
+
+```javascript
+// redux reducer
+const reducer = (state, action) => {
+    // receives both global and local actions
+    ...
+};
+
+// local reducer
+const localReducer = (localState, localAction) => {
+    // receives only local actions for concrete instance of component
+    ...
+};
+```
