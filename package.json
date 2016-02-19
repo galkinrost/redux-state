@@ -1,6 +1,6 @@
 {
   "name": "redux-state",
-  "version": "0.0.5",
+  "version": "0.1.1",
   "description": "A high order component using react-redux style to keep component state in redux store",
   "files": [
     "dist",
