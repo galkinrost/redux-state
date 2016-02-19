@@ -28,7 +28,7 @@ var config = {
         ]
     },
     output: {
-        library: 'ReactRedux',
+        library: 'ReduxState',
         libraryTarget: 'umd'
     },
     plugins: [
