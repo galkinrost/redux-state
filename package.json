@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Babo-Ltd/redux-state.git"
+    "url": "git+https://github.com/babotech/redux-state.git"
   },
   "keywords": [
     "redux",
@@ -33,9 +33,9 @@
   "author": "Galkin Rostislav <galkinrost@gmail.com> (http://github.com/galkinrost)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Babo-Ltd/redux-state/issues"
+    "url": "https://github.com/babotech/redux-state/issues"
   },
-  "homepage": "https://github.com/Babo-Ltd/redux-state#readme",
+  "homepage": "https://github.com/babotech/redux-state#readme",
   "devDependencies": {
     "babel-core": "6.5.1",
     "babel-loader": "6.2.2",
