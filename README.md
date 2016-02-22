@@ -1,4 +1,4 @@
-# Redux State
+# Redux State [![Build Status](https://travis-ci.org/babotech/redux-state.svg?branch=master)](https://travis-ci.org/babotech/redux-state)
 
 `connect()` style implementation of storage a local state for reusable components
 
