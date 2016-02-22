@@ -1,4 +1,4 @@
-import reducer from './statesReducer';
-import connectState from './connectState';
+import connectState from './connectState'
+import reducer from './statesReducer'
 
-export {reducer, connectState};
+export {connectState, reducer}

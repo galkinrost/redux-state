@@ -1,16 +1,17 @@
-import reducer from '../src/statesReducer';
-import * as actionTypes from '../src/actionTypes';
-import sinon from 'sinon';
-import expect from 'expect';
+import * as actionTypes from '../src/actionTypes'
 
-describe('redux-state', ()=> {
-    describe('statesReducer', ()=> {
-        it('should create initial state', ()=> {
-            const stateId = '001';
+import expect from 'expect'
+import reducer from '../src/statesReducer'
+import sinon from 'sinon'
+
+describe(`redux-state`, () => {
+    describe(`statesReducer`, () => {
+        it(`should create initial state`, () => {
+            const stateId = `001`
             const stateOfState = {
-                foo: 'bar'
-            };
-            const stateReducer = sinon.stub().returns(stateOfState);
+                foo: `bar`
+            }
+            const stateReducer = sinon.stub().returns(stateOfState)
 
             expect(reducer({}, {
                 type: actionTypes.INIT_STATE,
@@ -24,13 +25,13 @@ describe('redux-state', ()=> {
                     stateId,
                     stateReducer
                 }
-            });
+            })
 
-            expect(stateReducer.calledOnce).toBeTruthy();
-        });
+            expect(stateReducer.calledOnce).toBeTruthy()
+        })
 
-        it('should remove state', ()=> {
-            const stateId = '001';
+        it(`should remove state`, () => {
+            const stateId = `001`
 
             expect(reducer({
                 [stateId]: {}
@@ -40,44 +41,44 @@ describe('redux-state', ()=> {
                     stateId
                 }
             })).toEqual({})
-        });
+        })
 
-        it('should not call internal state`s reducer', () => {
-            const stateReducer = sinon.stub();
+        it(`should not call internal state\`s reducer`, () => {
+            const stateReducer = sinon.stub()
             const initialState = {
                 '001': {
                     stateReducer
                 }
-            };
+            }
 
             expect(reducer(initialState, {}))
-                .toEqual(initialState);
+                .toEqual(initialState)
 
-            expect(stateReducer.called).toBeFalsy();
-        });
+            expect(stateReducer.called).toBeFalsy()
+        })
 
-        it('should call internal state`s reducer', ()=> {
-            const stateId = '001';
+        it(`should call internal state\`s reducer`, () => {
+            const stateId = `001`
             const action = {
-                type: 'action',
-                payload: 'payload',
+                type: `action`,
+                payload: `payload`,
                 stateId
-            };
+            }
             const stateOfState = {
-                foo: 'bar'
-            };
+                foo: `bar`
+            }
             const updatedStateOfState = {
-                bar: 'foo'
-            };
+                bar: `foo`
+            }
             const stateReducer = sinon.stub()
-                .returns(updatedStateOfState);
+                .returns(updatedStateOfState)
             const initialState = {
                 [stateId]: {
                     stateId,
                     stateReducer,
                     state: stateOfState
                 }
-            };
+            }
 
             expect(reducer(initialState, action))
                 .toEqual({
@@ -86,9 +87,9 @@ describe('redux-state', ()=> {
                         stateReducer,
                         state: updatedStateOfState
                     }
-                });
+                })
 
-            expect(stateReducer.withArgs(stateOfState, action).calledOnce).toBeTruthy();
-        });
-    });
-});
+            expect(stateReducer.withArgs(stateOfState, action).calledOnce).toBeTruthy()
+        })
+    })
+})
