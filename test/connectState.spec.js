@@ -1,10 +1,10 @@
 import * as actionTypes from '../src/actionTypes'
 
 import React, {Children, Component, PropTypes} from 'react'
+import {combineReducers, createStore} from 'redux'
 
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
-import {combineReducers, createStore} from 'redux'
 
 import connectState from '../src/connectState'
 import expect from 'expect'
@@ -260,7 +260,7 @@ describe(`redux-state`, () => {
                 states: statesReducer
             })
             const store = createStore(reducer)
-            const stateReducer = (state = '', action = {}) => action.type === `TEST` ? (state + action.result) : state
+            const stateReducer = (state = ``, action = {}) => action.type === `TEST` ? (state + action.result) : state
 
             @connectState(mapStateToProps, mapDispatchToProps, undefined, stateReducer)
             class Container extends Component {
@@ -281,7 +281,7 @@ describe(`redux-state`, () => {
             expect(passthrough.props.state).toEqual(``)
             passthrough.props.dispatch({
                 type: `TEST`,
-                result: 'a'
+                result: `a`
             })
             expect(passthrough.props.state).toEqual(`a`)
         })
