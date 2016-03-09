@@ -91,5 +91,40 @@ describe(`redux-state`, () => {
 
             expect(stateReducer.withArgs(stateOfState, action).calledOnce).toBeTruthy()
         })
+
+        it(`should call internal state\`s reducer if stateId is not undefined`, () => {
+            const stateId = 0
+            const action = {
+                type: `action`,
+                payload: `payload`,
+                stateId
+            }
+            const stateOfState = {
+                foo: `bar`
+            }
+            const updatedStateOfState = {
+                bar: `foo`
+            }
+            const stateReducer = sinon.stub()
+                .returns(updatedStateOfState)
+            const initialState = {
+                [stateId]: {
+                    stateId,
+                    stateReducer,
+                    state: stateOfState
+                }
+            }
+
+            expect(reducer(initialState, action))
+                .toEqual({
+                    [stateId]: {
+                        stateId,
+                        stateReducer,
+                        state: updatedStateOfState
+                    }
+                })
+
+            expect(stateReducer.withArgs(stateOfState, action).calledOnce).toBeTruthy()
+        })
     })
 })

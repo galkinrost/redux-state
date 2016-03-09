@@ -29,7 +29,7 @@ const statesReducer = (state = initialState, action) => {
             }
     }
 
-    if (action.stateId) {
+    if (typeof action.stateId !== `undefined`) {
         const {[action.stateId]: stateToUpdate, ...restStates} = state
         const {state: stateOfStateToUpdate, ...restOfStateToUpdate} = stateToUpdate
 
