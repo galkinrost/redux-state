@@ -22,7 +22,7 @@ const checkStateConnected = store => invariant(getStateOfStates(store), `Should 
 const createStateDispatch = (store, stateId) => {
     const stateDispatch = (action) => {
         const states = getStateOfStates(store)
-        invariant(states[stateId], `Somebody trying get state when component\`s already unmount`)
+        invariant(states[ stateId ], `Somebody trying get state when component\`s already unmount`)
 
         if (typeof action === `function`) {
             const getState = () => {
@@ -62,6 +62,14 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
                 }
             }
 
+            componentDidMount() {
+                const {store} = this.context
+
+                this.unsubscribe = store.subscribe(() =>
+                    this.forceUpdate()
+                )
+            }
+
             componentWillMount() {
                 const {store} = this.context
                 checkStateConnected(store)
@@ -81,6 +89,8 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
             }
 
             componentWillUnmount() {
+                this.unsubscribe()
+
                 if (stateReducer) {
                     const {stateId} = this.state
                     const {store} = this.context

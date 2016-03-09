@@ -4,11 +4,12 @@ import React, {Children, Component, PropTypes} from 'react'
 
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
+import {combineReducers, createStore} from 'redux'
 
 import connectState from '../src/connectState'
-import {createStore} from 'redux'
 import expect from 'expect'
 import sinon from 'sinon'
+import statesReducer from '../src/statesReducer'
 
 
 describe(`redux-state`, () => {
@@ -245,6 +246,81 @@ describe(`redux-state`, () => {
                 type: `SOME_TYPE`,
                 stateId
             }).calledOnce).toBeTruthy()
+        })
+
+        it(`should subscribe component to the store changes`, () => {
+            const mapStateToProps = state => ({
+                state
+            })
+            const mapDispatchToProps = dispatch => ({
+                dispatch
+            })
+
+            const reducer = combineReducers({
+                states: statesReducer
+            })
+            const store = createStore(reducer)
+            const stateReducer = (state = '', action = {}) => action.type === `TEST` ? (state + action.result) : state
+
+            @connectState(mapStateToProps, mapDispatchToProps, undefined, stateReducer)
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container />
+                </ProviderMock>
+            )
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+
+            expect(passthrough.props.state).toEqual(``)
+            passthrough.props.dispatch({
+                type: `TEST`,
+                result: 'a'
+            })
+            expect(passthrough.props.state).toEqual(`a`)
+        })
+
+        it(`should unsubscribe from store updates when component did unmount`, () => {
+            const reducer = combineReducers({
+                states: statesReducer
+            })
+            const store = createStore(reducer)
+
+            const subscribe = store.subscribe
+            const spy = sinon.spy()
+            store.subscribe = (listener) => {
+                const unsubscribe = subscribe(listener)
+                return () => {
+                    spy()
+                    return unsubscribe()
+                }
+            }
+
+            @connectState(undefined, undefined, undefined, () => null)
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const div = document.createElement(`div`)
+            ReactDOM.render(
+                <ProviderMock store={store}>
+                    <Container />
+                </ProviderMock>
+                , div)
+
+            ReactDOM.unmountComponentAtNode(div)
+
+            expect(spy.calledOnce).toBeTruthy()
         })
     })
 })
