@@ -322,5 +322,87 @@ describe(`redux-state`, () => {
 
             expect(spy.calledOnce).toBeTruthy()
         })
+
+        it(`should transfer updated props when dispatch fires on componentWillMount`, () => {
+            const mapStateToProps = state => ({
+                state
+            })
+            const mapDispatchToProps = dispatch => ({
+                dispatch
+            })
+
+            const reducer = combineReducers({
+                states: statesReducer
+            })
+            const store = createStore(reducer)
+            const stateReducer = (state = ``, action = {}) => action.type === `TEST` ? (state + action.result) : state
+
+            @connectState(mapStateToProps, mapDispatchToProps, undefined, stateReducer)
+            class Container extends Component {
+                componentWillMount() {
+                    const {dispatch} = this.props
+
+                    dispatch({
+                        type: `TEST`,
+                        result: `a`
+                    })
+                }
+
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container />
+                </ProviderMock>
+            )
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+            expect(passthrough.props.state).toEqual(`a`)
+        })
+
+        it(`should transfer updated props when dispatch fires on componentDidMount`, () => {
+            const mapStateToProps = state => ({
+                state
+            })
+            const mapDispatchToProps = dispatch => ({
+                dispatch
+            })
+
+            const reducer = combineReducers({
+                states: statesReducer
+            })
+            const store = createStore(reducer)
+            const stateReducer = (state = ``, action = {}) => action.type === `TEST` ? (state + action.result) : state
+
+            @connectState(mapStateToProps, mapDispatchToProps, undefined, stateReducer)
+            class Container extends Component {
+                componentDidMount() {
+                    const {dispatch} = this.props
+
+                    dispatch({
+                        type: `TEST`,
+                        result: `a`
+                    })
+                }
+
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container />
+                </ProviderMock>
+            )
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+            expect(passthrough.props.state).toEqual(`a`)
+        })
     })
 })

@@ -56,6 +56,14 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
     return WrappedComponent => {
         class ReduxState extends Component {
 
+            constructor(_, context) {
+                super()
+
+                this.state = {
+                    reduxState: context.store.getState()
+                }
+            }
+
             getChildContext() {
                 return {
                     stateId: this.state.stateId
@@ -66,6 +74,9 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
                 const {store} = this.context
 
                 this.unsubscribe = store.subscribe(() =>
+                    this.setState({
+                        reduxState: store.getState()
+                    }),
                     this.forceUpdate()
                 )
             }
