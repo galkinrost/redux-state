@@ -155,4 +155,6 @@ class WithState extends Component {
     }
 }
 
+export default staty(WithState)
+
 ```
