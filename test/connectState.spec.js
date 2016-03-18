@@ -59,6 +59,45 @@ describe(`redux-state`, () => {
             )).toThrow(/with reducer/)
         })
 
+        it(`should not throw error if parent's stateId is 0`, () => {
+            const store = createStoreWithStates({
+                0: {}
+            })
+
+            @connectState()
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            class ParentContainer extends Component {
+
+                getChildContext() {
+                    return {
+                        stateId: 0
+                    }
+                }
+
+                render() {
+                    return this.props.children
+                }
+            }
+
+            ParentContainer.childContextTypes = {
+                stateId: PropTypes.any
+            }
+
+            expect(() => TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <ParentContainer>
+                        <Container/>
+                    </ParentContainer>
+                </ProviderMock>
+            )).toNotThrow()
+        })
 
         it(`should call dispatch with initial action`, () => {
             const stateId = `001`

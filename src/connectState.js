@@ -97,7 +97,7 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
                 } else {
                     const {stateId} = this.context
 
-                    invariant(stateId, `Should declare component with reducer`)
+                    invariant(typeof stateId !== `undefined`, `Should declare component with reducer`)
 
                     this.setState({stateId})
                 }
