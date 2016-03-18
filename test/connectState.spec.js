@@ -10,6 +10,7 @@ import connectState from '../src/connectState'
 import expect from 'expect'
 import sinon from 'sinon'
 import statesReducer from '../src/statesReducer'
+import staty from '../src/staty'
 
 
 describe(`redux-state`, () => {
@@ -442,6 +443,54 @@ describe(`redux-state`, () => {
             )
             const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
             expect(passthrough.props.state).toEqual(`a`)
+        })
+
+        it(`should create 'react API'-style props for state`, () => {
+
+            const stateId = `001`
+            const state = {
+                foo: `bar`
+            }
+            const store = createStoreWithStates({
+                [stateId]: {
+                    state
+                }
+            })
+
+            @staty
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container stateId={stateId}/>
+                </ProviderMock>
+            )
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+            expect(passthrough.props.state).toEqual(state)
+            expect(passthrough.props.setState).toExist()
+
+            expect.spyOn(store, `dispatch`)
+                .andCallThrough()
+
+            passthrough.props.setState({
+                foo: `baz`
+            })
+
+            const callsCount = 1
+            expect(store.dispatch.calls.length).toEqual(callsCount)
+
+            const {arguments: args} = store.dispatch.calls[ 0 ]
+
+            expect(args[0].payload.state).toEqual({
+                foo: `baz`
+            })
+
         })
     })
 })
