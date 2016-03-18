@@ -73,12 +73,16 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
             componentDidMount() {
                 const {store} = this.context
 
-                this.unsubscribe = store.subscribe(() =>
+                this.unsubscribe = store.subscribe(() => {
+                    if (!this.unsubscribe) {
+                        return
+                    }
+
                     this.setState({
                         reduxState: store.getState()
-                    }),
-                    this.forceUpdate()
-                )
+                    })
+                },
+                this.forceUpdate())
             }
 
             componentWillMount() {
@@ -102,6 +106,8 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
             componentWillUnmount() {
                 this.unsubscribe()
 
+                this.unsubscribe = null
+                
                 if (stateReducer) {
                     const {stateId} = this.state
                     const {store} = this.context
