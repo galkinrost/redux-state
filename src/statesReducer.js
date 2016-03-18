@@ -41,7 +41,21 @@ const statesReducer = (state = initialState, action) => {
             }
         }
     }
-    return state
+
+    return Object
+        .keys(state)
+        .reduce((updatedStates, stateId) => {
+            const {[stateId]: stateToUpdate, ...restStates} = updatedStates
+            const {state: stateOfStateToUpdate, ...restOfStateToUpdate} = stateToUpdate
+
+            return {
+                ...restStates,
+                [stateId]: {
+                    ...restOfStateToUpdate,
+                    state: stateToUpdate.stateReducer(stateOfStateToUpdate, action)
+                }
+            }
+        }, state)
 }
 
 export default statesReducer

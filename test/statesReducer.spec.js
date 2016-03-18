@@ -42,21 +42,7 @@ describe(`redux-state`, () => {
                 }
             })).toEqual({})
         })
-
-        it(`should not call internal state\`s reducer`, () => {
-            const stateReducer = sinon.stub()
-            const initialState = {
-                '001': {
-                    stateReducer
-                }
-            }
-
-            expect(reducer(initialState, {}))
-                .toEqual(initialState)
-
-            expect(stateReducer.called).toBeFalsy()
-        })
-
+        
         it(`should call internal state\`s reducer`, () => {
             const stateId = `001`
             const action = {
@@ -125,6 +111,45 @@ describe(`redux-state`, () => {
                 })
 
             expect(stateReducer.withArgs(stateOfState, action).calledOnce).toBeTruthy()
+        })
+
+        it(`should pass global actions into local reducers`, () => {
+            const action = {
+                type: `action`,
+                payload: `payload`
+            }
+            const stateOfState = {
+                foo: `bar`
+            }
+            const updatedStateOfState = {
+                bar: `foo`
+            }
+            const stateReducer = sinon.stub()
+                .returns(updatedStateOfState)
+            const initialState = {
+                0: {
+                    stateReducer,
+                    state: stateOfState
+                },
+                1: {
+                    stateReducer,
+                    state: stateOfState
+                }
+            }
+
+            expect(reducer(initialState, action))
+                .toEqual({
+                    0: {
+                        stateReducer,
+                        state: updatedStateOfState
+                    },
+                    1: {
+                        stateReducer,
+                        state: updatedStateOfState
+                    }
+                })
+
+            expect(stateReducer.withArgs(stateOfState, action).calledTwice).toBeTruthy()
         })
     })
 })
