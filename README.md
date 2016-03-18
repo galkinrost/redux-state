@@ -130,3 +130,29 @@ const Child = () =>(
 );
 export default connectState(mapStateToProps, mapDispatchToProps, mergeProps)(Child);
 ```
+
+## Like React API
+
+```javascript
+...
+import {staty} from 'redux-state'
+
+class WithState extends Component {
+
+    componentDidMount() {
+        const {setState} = this.props
+        
+        setState({
+            foo: `bar`
+        })
+    }
+    
+    render() {
+        const {state} = this.props
+        const {foo} = state
+        
+        ...
+    }
+}
+
+```
