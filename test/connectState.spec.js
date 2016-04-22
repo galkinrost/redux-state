@@ -243,6 +243,44 @@ describe(`redux-state`, () => {
                 Passthrough.contextTypes = {}
             }
         })
+        
+        it(`should not pass stateId into the context if this option disabled`, () => {
+            const stateId = `001`
+            const store = createStoreWithStates({
+                [stateId]: {
+                    state: {}
+                }
+            })
+            const stateReducer = () => ({})
+            Passthrough.contextTypes = {
+                stateId: PropTypes.string
+            }
+
+            try {
+
+                @connectState(undefined, undefined, undefined, stateReducer, false)
+                class Container extends Component {
+                    render() {
+                        return (
+                            <Passthrough {...this.props}/>
+                        )
+                    }
+                }
+
+                const tree = TestUtils.renderIntoDocument(
+                    <ProviderMock store={store}>
+                        <Container stateId={stateId}/>
+                    </ProviderMock>
+                )
+
+                const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+
+                expect(passthrough.context.stateId).toNotExist()
+
+            } finally {
+                Passthrough.contextTypes = {}
+            }
+        })
 
         it(`should work like thunk-middleware when function passed as an action`, () => {
             const stateId = `001`
@@ -444,7 +482,7 @@ describe(`redux-state`, () => {
             const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
             expect(passthrough.props.state).toEqual(`a`)
         })
-
+        
         it(`should create 'react API'-style props for state`, () => {
 
             const stateId = `001`

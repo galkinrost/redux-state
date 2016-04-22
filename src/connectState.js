@@ -41,7 +41,7 @@ const createStateDispatch = (store, stateId) => {
     return stateDispatch
 }
 
-const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateDispatchToProps = defaultMapDispatchToProps, mergeProps = defaultMergeProps, stateReducer) => {
+const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateDispatchToProps = defaultMapDispatchToProps, mergeProps = defaultMergeProps, stateReducer, passIdIntoContext = true) => {
 
     const mapStateToProps = (store, stateId, props) => {
         const {[stateId]: {state: stateOfState}} = getStateOfStates(store)
@@ -65,9 +65,13 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
             }
 
             getChildContext() {
-                return {
-                    stateId: this.state.stateId
+                if (passIdIntoContext) {
+                    return {
+                        stateId: this.state.stateId
+                    }
                 }
+
+                return {}
             }
 
             componentDidMount() {
@@ -107,7 +111,7 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
                 this.unsubscribe()
 
                 this.unsubscribe = null
-                
+
                 if (stateReducer) {
                     const {stateId} = this.state
                     const {store} = this.context
