@@ -81,15 +81,15 @@ const connectState = (mapStateOfStateToProps = defaultMapStateToProps, mapStateD
                 const {store} = this.context
 
                 this.unsubscribe = store.subscribe(() => {
-                        if (!this.unsubscribe) {
-                            return
-                        }
+                    if (!this.unsubscribe) {
+                        return
+                    }
 
-                        this.setState({
-                            reduxState: store.getState()
-                        })
-                    },
-                    this.forceUpdate())
+                    this.setState({
+                        reduxState: store.getState()
+                    })
+                },
+                this.forceUpdate())
             }
 
             componentWillMount() {
