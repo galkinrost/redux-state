@@ -1,4 +1,4 @@
-import {INIT_STATE, REMOVE_STATE} from './actionTypes'
+import { INIT_STATE, REMOVE_STATE } from './actionTypes'
 
 const stateCreator = (stateId, stateReducer) => ({
     stateId,
@@ -29,13 +29,15 @@ const statesReducer = (state = initialState, action) => {
             }
     }
 
-    if (typeof action.stateId !== `undefined`) {
-        const {[action.stateId]: stateToUpdate, ...restStates} = state
+    const stateId = action.meta && action.meta.stateId
+
+    if (typeof stateId !== `undefined`) {
+        const {[stateId]: stateToUpdate, ...restStates} = state
         const {state: stateOfStateToUpdate, ...restOfStateToUpdate} = stateToUpdate
 
         return {
             ...restStates,
-            [action.stateId]: {
+            [stateId]: {
                 ...restOfStateToUpdate,
                 state: stateToUpdate.stateReducer(stateOfStateToUpdate, action)
             }
@@ -44,13 +46,13 @@ const statesReducer = (state = initialState, action) => {
 
     return Object
         .keys(state)
-        .reduce((updatedStates, stateId) => {
-            const {[stateId]: stateToUpdate, ...restStates} = updatedStates
+        .reduce((updatedStates, _stateId) => {
+            const {[_stateId]: stateToUpdate, ...restStates} = updatedStates
             const {state: stateOfStateToUpdate, ...restOfStateToUpdate} = stateToUpdate
 
             return {
                 ...restStates,
-                [stateId]: {
+                [_stateId]: {
                     ...restOfStateToUpdate,
                     state: stateToUpdate.stateReducer(stateOfStateToUpdate, action)
                 }

@@ -202,9 +202,54 @@ describe(`redux-state`, () => {
 
             expect(dispatchSpy.withArgs({
                 type: `SOME_TYPE`,
-                stateId
+                meta: {
+                    stateId
+                }
             }).calledOnce).toBeTruthy()
         })
+
+        it(`should not override meta field in action`, () => {
+            const stateId = `001`
+            const store = createStoreWithStates({
+                [stateId]: {
+                    state: {}
+                }
+            })
+            const dispatchSpy = sinon.spy(store, `dispatch`)
+            const stateReducer = () => ({})
+
+            @connectState(undefined, undefined, undefined, stateReducer)
+            class Container extends Component {
+                render() {
+                    return (
+                        <Passthrough {...this.props}/>
+                    )
+                }
+            }
+
+            const tree = TestUtils.renderIntoDocument(
+                <ProviderMock store={store}>
+                    <Container stateId={stateId}/>
+                </ProviderMock>
+            )
+            const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
+
+            passthrough.props.stateDispatch({
+                type: `SOME_TYPE`,
+                meta: {
+                    foo: `bar`
+                }
+            })
+
+            expect(dispatchSpy.withArgs({
+                type: `SOME_TYPE`,
+                meta: {
+                    foo: `bar`,
+                    stateId
+                }
+            }).calledOnce).toBeTruthy()
+        })
+
 
         it(`should pass stateId into the context`, () => {
             const stateId = `001`
@@ -322,7 +367,9 @@ describe(`redux-state`, () => {
 
             expect(dispatchSpy.withArgs({
                 type: `SOME_TYPE`,
-                stateId
+                meta: {
+                    stateId
+                }
             }).calledOnce).toBeTruthy()
         })
 

@@ -48,7 +48,9 @@ describe(`redux-state`, () => {
             const action = {
                 type: `action`,
                 payload: `payload`,
-                stateId
+                meta: {
+                    stateId
+                }
             }
             const stateOfState = {
                 foo: `bar`
@@ -82,8 +84,7 @@ describe(`redux-state`, () => {
             const stateId = 0
             const action = {
                 type: `action`,
-                payload: `payload`,
-                stateId
+                payload: `payload`
             }
             const stateOfState = {
                 foo: `bar`
