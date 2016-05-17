@@ -1,6 +1,6 @@
 import {UPDATE_STATY} from './actionTypes'
 import connectState from './connectState'
-import statyReducer from './statyReducer'
+import statyReducerCreator from './statyReducer'
 
 const mapStateToProps = (state) => ({
     state
@@ -15,6 +15,6 @@ const mapDispatchToProps = (dispatch) => ({
     })
 })
 
-const staty = WrappedComponent => connectState(mapStateToProps, mapDispatchToProps, undefined, statyReducer)(WrappedComponent)
+const staty = initialState => WrappedComponent => connectState(mapStateToProps, mapDispatchToProps, undefined, statyReducerCreator(initialState))(WrappedComponent)
 
 export default staty

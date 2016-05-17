@@ -1,6 +1,6 @@
-import {UPDATE_STATY} from './actionTypes'
+import { UPDATE_STATY } from './actionTypes'
 
-const statyReducer = (state = {}, action = {}) => {
+const statyReducerCreator = (initialState = {}) => (state = initialState, action = {}) => {
     if (action.type === UPDATE_STATY) {
         return Object.assign({}, state, action.payload.state)
     }
@@ -8,4 +8,4 @@ const statyReducer = (state = {}, action = {}) => {
     return state
 }
 
-export default statyReducer
+export default statyReducerCreator

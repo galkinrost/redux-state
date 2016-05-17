@@ -5,7 +5,7 @@ import statyReducer from '../src/statyReducer'
 describe(`redux-state`, () => {
     describe(`statyReducer`, () => {
         it(`should rewrite property in the state`, () => {
-            expect(statyReducer({
+            expect(statyReducer({})({
                 foo: `bar`
             }, {
                 type: actionTypes.UPDATE_STATY,
@@ -20,7 +20,7 @@ describe(`redux-state`, () => {
         })
 
         it(`should merge properties`, () => {
-            expect(statyReducer({
+            expect(statyReducer({})({
                 foo1: `bar`
             }, {
                 type: actionTypes.UPDATE_STATY,

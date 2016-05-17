@@ -143,7 +143,7 @@ class WithState extends Component {
         const {setState} = this.props
         
         setState({
-            foo: `bar`
+            foo: `baz`
         })
     }
     
@@ -155,6 +155,10 @@ class WithState extends Component {
     }
 }
 
-export default staty(WithState)
+const initialState = {
+    foo: `bar`
+}
+
+export default staty(initialState)(WithState)
 
 ```

@@ -542,7 +542,7 @@ describe(`redux-state`, () => {
                 }
             })
 
-            @staty
+            @staty({})
             class Container extends Component {
                 render() {
                     return (
