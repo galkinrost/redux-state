@@ -1,7 +1,7 @@
 import * as actionTypes from '../src/actionTypes'
 
-import React, {Children, Component, PropTypes} from 'react'
-import {combineReducers, createStore} from 'redux'
+import React, { Children, Component, PropTypes } from 'react'
+import { combineReducers, createStore } from 'redux'
 
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
@@ -288,7 +288,7 @@ describe(`redux-state`, () => {
                 Passthrough.contextTypes = {}
             }
         })
-        
+
         it(`should not pass stateId into the context if this option disabled`, () => {
             const stateId = `001`
             const store = createStoreWithStates({
@@ -529,7 +529,7 @@ describe(`redux-state`, () => {
             const passthrough = TestUtils.findRenderedComponentWithType(tree, Passthrough)
             expect(passthrough.props.state).toEqual(`a`)
         })
-        
+
         it(`should create 'react API'-style props for state`, () => {
 
             const stateId = `001`
@@ -572,7 +572,7 @@ describe(`redux-state`, () => {
 
             const {arguments: args} = store.dispatch.calls[ 0 ]
 
-            expect(args[0].payload.state).toEqual({
+            expect(args[ 0 ].payload.state).toEqual({
                 foo: `baz`
             })
 

@@ -1,4 +1,4 @@
-import {INIT_STATE, REMOVE_STATE, UPDATE_STATY} from './actionTypes'
+import { INIT_STATE, REMOVE_STATE, UPDATE_STATY } from './actionTypes'
 
 export const initState = (stateId, stateReducer) => ({
     type: INIT_STATE,

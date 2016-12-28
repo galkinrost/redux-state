@@ -1,4 +1,4 @@
-import {UPDATE_STATY} from './actionTypes'
+import { UPDATE_STATY } from './actionTypes'
 import connectState from './connectState'
 import statyReducerCreator from './statyReducer'
 
